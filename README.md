@@ -32,8 +32,8 @@ Sistema local para upload e indexação de materiais didáticos em banco de dado
 Cada componente possui seu próprio README com instruções detalhadas de instalação e uso.
 
 1. Configure o sistema RAG para indexar os materiais
-2. Inicie a API
-3. Execute o frontend
+2. Inicie ou acesse a API (https://adaptaedu-api.vercel.app/)
+3. Execute ou acesse o frontend (https://adaptaedu.vercel.app/)
 
 Para instruções específicas, consulte o README de cada pasta.
 
