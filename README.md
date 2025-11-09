@@ -1,7 +1,7 @@
 # AdaptaEdu
 
 <div align="center">
-  <img src="./logo.png" alt="AdaptaEdu Logo" width="200"/>
+  <img src="./logo.png" alt="AdaptaEdu Logo" width="400"/>
 </div>
 
 ## Sobre
