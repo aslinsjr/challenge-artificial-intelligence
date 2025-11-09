@@ -1,6 +1,8 @@
 # AdaptaEdu
 
-![AdaptaEdu Interface](./logo.png)
+<div align="center">
+  <img src="./logo.png" alt="AdaptaEdu Logo" width="200"/>
+</div>
 
 ## Sobre
 
