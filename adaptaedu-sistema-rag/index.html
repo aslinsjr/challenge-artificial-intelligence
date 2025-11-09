@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema RAG AdaptaEdu - Upload</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #171c28;
+            padding: 0.5rem 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #1e2530;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        img {
+            width: 20%;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: hsla(0, 0%, 100%, 0.808);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: hsla(0, 0%, 100%, 0.808);
+            font-weight: 500;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #171c28;
+            color: hsla(0, 0%, 100%, 0.8);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .status {
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            display: block;
+        }
+
+        .file-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .result {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 6px;
+            margin-top: 16px;
+            white-space: pre-wrap;
+        }
+
+        .arquivos {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .arquivo-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .arquivo-link:hover {
+            background: #0056b3;
+        }
+
+        .docs-list {
+            list-style: none;
+        }
+
+        .doc-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .doc-info {
+            flex: 1;
+        }
+
+        .doc-name {
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .doc-meta {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .doc-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+
+            <div class="header">
+                <h1>📁 Upload de Documentos </h1>
+                <img src="./logo.png" alt="">
+            </div>
+
+            <div id="uploadSection">
+                <div class="form-group">
+                    <label>Arquivo (PDF, Imagem, Vídeo, Texto)</label>
+                    <input type="file" id="fileInput" required>
+                    <div class="file-info" id="fileInfo"></div>
+                </div>
+                <div class="form-group">
+                    <label>Tags (separadas por vírgula)</label>
+                    <input type="text" id="tagsInput" placeholder="ex: matemática, aula, geometria">
+                </div>
+                <button id="uploadBtn">Enviar Documento</button>
+                <div class="status" id="uploadStatus"></div>
+            </div>
+        </div>
+
+
+        <div class="card">
+            <h2>📚 Documentos Indexados</h2>
+            <button id="refreshDocsBtn">Atualizar Lista</button>
+            <ul class="docs-list" id="docsList"></ul>
+        </div>
+    </div>
+    <script>
+        const API_URL = 'http://localhost:3000';
+
+        // Log inicial
+        console.log('✓ Script carregado');
+
+        // Prevenir reload indesejado
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Listener para seleção de arquivo
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+                document.getElementById('fileInfo').textContent = `${file.name} (${sizeMB} MB)`;
+                console.log(`Arquivo selecionado: ${file.name} - ${sizeMB} MB`);
+            }
+        });
+
+        // UPLOAD
+        document.getElementById('uploadBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const fileInput = document.getElementById('fileInput');
+            const tagsInput = document.getElementById('tagsInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const status = document.getElementById('uploadStatus');
+
+            try {
+                if (!fileInput.files[0]) {
+                    status.className = 'status error';
+                    status.textContent = '✗ Selecione um arquivo';
+                    status.style.display = 'block';
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                formData.append('tags', tagsInput.value);
+
+                uploadBtn.disabled = true;
+                status.className = 'status loading';
+                status.textContent = 'Processando... Pode levar alguns minutos.';
+                status.style.display = 'block';
+
+                console.log('Iniciando upload...');
+
+                const res = await fetch(`${API_URL}/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log('Status da resposta:', res.status);
+
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error('Erro do servidor:', res.status, errorText);
+                    throw new Error(`Servidor: ${res.status} - ${errorText}`);
+                }
+
+                const data = await res.json();
+                console.log('✓ Dados recebidos:', data);
+
+                if (data.success) {
+                    status.className = 'status success';
+                    status.textContent = `✓ Sucesso! ${data.chunks} chunks criados (${data.tamanho_mb} MB)\nTags: ${data.tags.join(', ')}`;
+                    fileInput.value = '';
+                    tagsInput.value = '';
+                    document.getElementById('fileInfo').textContent = '';
+
+                    // Recarregar documentos (sem bloquear em caso de erro)
+                    setTimeout(() => {
+                        loadDocs().catch(err => console.error('Erro ao recarregar docs:', err));
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || 'Erro desconhecido');
+                }
+
+            } catch (error) {
+                console.error('✗ Erro:', error);
+                status.className = 'status error';
+                status.textContent = `✗ Erro: ${error.message}`;
+                status.style.display = 'block';
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        });
+
+
+        // CARREGAR DOCUMENTOS
+        async function loadDocs() {
+            console.log('Carregando documentos...');
+            const docsList = document.getElementById('docsList');
+            docsList.innerHTML = '<li>Carregando...</li>';
+
+            try {
+                const res = await fetch(`${API_URL}/documentos`);
+
+                if (!res.ok) {
+                    throw new Error(`Erro ${res.status}`);
+                }
+
+                const docs = await res.json();
+                console.log('Documentos carregados:', docs.length);
+
+                if (docs.length === 0) {
+                    docsList.innerHTML = '<li style="padding:12px;color:#999;">Nenhum documento indexado</li>';
+                    return;
+                }
+
+                docsList.innerHTML = docs.map(doc => `
+            <li class="doc-item">
+                <div class="doc-info">
+                    <div class="doc-name">${doc.nome}</div>
+                    <div class="doc-meta">
+                        ${doc.tipo.toUpperCase()} • ${doc.chunks} chunks • ${doc.tamanho_mb.toFixed(2)} MB
+                        ${doc.tags && doc.tags.length > 0 ? ' • Tags: ' + doc.tags.join(', ') : ''}
+                    </div>
+                </div>
+                <div class="doc-actions">
+                    <a href="${doc.url}" target="_blank" class="arquivo-link">Abrir</a>
+                    <button class="btn-delete" onclick="deleteDoc('${doc.url}', '${doc.nome}')">🗑️ Excluir</button>
+                </div>
+            </li>
+        `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar docs:', error);
+                docsList.innerHTML = `<li style="color:#721c24;padding:12px;">Erro ao carregar: ${error.message}</li>`;
+            }
+        }
+
+        // EXCLUIR DOCUMENTO
+        async function deleteDoc(url, nome) {
+            if (!confirm(`Tem certeza que deseja excluir "${nome}"?`)) {
+                return;
+            }
+
+            try {
+                const encodedUrl = encodeURIComponent(url);
+                const res = await fetch(`${API_URL}/documento/${encodedUrl}`, {
+                    method: 'DELETE'
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Erro ${res.status}`);
+                }
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert('✓ Documento excluído com sucesso!');
+                    loadDocs();
+                }
+            } catch (error) {
+                console.error('Erro ao excluir:', error);
+                alert(`✗ Erro ao excluir: ${error.message}`);
+            }
+        }
+
+        // Botão refresh
+        document.getElementById('refreshDocsBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            loadDocs();
+        });
+
+        // Carregar docs ao iniciar
+        console.log('Iniciando carga inicial...');
+        loadDocs();
+    </script>
+</body>
+
+</html>

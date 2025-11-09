@@ -1,62 +1,38 @@
-+A Educação - Engenheiro de Inteligência Artificial
-===================
+# AdaptaEdu
 
-[![N|Solid](https://maisaedu.com.br/hubfs/site-grupo-a/logo-mais-a-educacao.svg)](https://maisaedu.com.br/) 
+![AdaptaEdu Interface](./logo.png)
 
-O objetivo deste desafio é avaliar as competências técnicas dos candidatos a Engenheiro de Inteligência Artificial na Maior Plataforma de Educação do Brasil.
+## Sobre
 
-Neste teste prático, você será apresentado a um conjunto de dados simulado relacionado aos fundamentos de programação. Seu objetivo é realizar a indexação dos diferentes tipos de dados e desenvolver um prompt de sistema de aprendizagem adaptativa que gere conteúdos dinâmicos conforme as dificuldades e desconhecimentos do usuário sobre o tema.
+AdaptaEdu é uma plataforma educacional inteligente que utiliza IA para criar experiências de aprendizado personalizadas. O sistema permite upload de materiais didáticos, indexação inteligente e interação através de chat alimentado por RAG (Retrieval-Augmented Generation).
 
-# Sobre os dados
+## Estrutura do Repositório
 
-O conjunto de dados definidos para este teste é de propriedade intelectual da +A Educação e deverá ser utilizado exclusivamente para esta finalidade, sendo composto por:
+O projeto está organizado em três componentes principais:
+```
+adaptaedu/
+├── adaptaedu/              # Frontend da aplicação
+├── adaptaedu-api/          # API de chat e consulta ao banco de dados
+└── adaptaedu-sistema-rag/  # Sistema de indexação e upload de materiais
+```
 
-- **Textos:** Uma coleção de textos extraídos de módulos de aprendizagem.
-- **PDFs:** Livros e manuais introdutórios sobre o conteúdo abordado.  
-- **Vídeos:** Pequenos vídeos de dicas de professor, que explicam o conteúdo abordado. Os vídeos estão em formatos .mp4 
+### 📱 [adaptaedu](./adaptaedu/README.md)
+Interface frontend da plataforma onde usuários interagem com o sistema educacional.
 
-O conjunto de dados pode ser obtido [clicando aqui](https://github.com/grupo-a/challenge-artificial-intelligence/tree/main/resources).
+### 🔌 [adaptaedu-api](./adaptaedu-api/README.md)
+API responsável pelo chat inteligente e consultas ao banco de dados.
 
-# Requisitos
-## Etapa 1: Indexação dos Dados
-Defina a ferramenta de indexação que considere adequada para o projeto. Recomenda-se escolher uma ferramenta que possa suportar a geração dinâmica de conteúdos adaptativos no prompt de IA generativa.
-Indexe os diferentes tipos de dados para permitir uma busca eficiente e relevante.
+### 🗄️ [adaptaedu-sistema-rag](./adaptaedu-sistema-rag/README.md)
+Sistema local para upload e indexação de materiais didáticos em banco de dados na nuvem.
 
-Os textos devem ser indexados para permitir uma busca eficiente por palavras-chave e frases relevantes.
+## Começando
 
-Os PDFs devem ser processados para extrair texto pesquisável e metadados importantes.
+Cada componente possui seu próprio README com instruções detalhadas de instalação e uso.
 
-Os vídeos devem ser transcritos, se possível, e indexados com base no texto transcrito, juntamente com metadados descritivos.
+1. Configure o sistema RAG para indexar os materiais
+2. Inicie a API
+3. Execute o frontend
 
-As imagens devem ser indexadas considerando metadados relevantes, como tags, descrições e informações sobre o conteúdo visual.
+Para instruções específicas, consulte o README de cada pasta.
 
-
-## Etapa 2:  Prompt de Aprendizagem Adaptativa
-Construa um prompt interativo, utilizando as tecnologias que julgar apropriadas, que identifique as dificuldades e lacunas de conhecimento dos usuários em um diálogo fluido e intuitivo para avaliar e entender as áreas onde seu conhecimento sobre um tema específico pode ser insuficiente. O escopo deve estar limitado ao conteúdo indexado.  Durante as interações, inclua mecanismos que permitam identificar as preferências dos usuários quanto ao formato de aprendizado mais efetivo para eles, seja texto, vídeo ou áudio, adaptando-se assim às suas preferências pessoais de consumo de conteúdo.
-
-Baseado nas interações analise as dificuldades e gere conteúdos dinâmicos curtos em diferentes formatos (vídeos, áudios, textos) para abordar as necessidades específicas de aprendizagem do usuário. Os conteúdos devem ser relevantes, informativos e adaptados ao nível de conhecimento do usuário.
-
-# Critérios de avaliação
-- Qualidade de escrita do código.
-- Organização do projeto.
-- Lógica da solução implementada.
-- Capacidade de escolher as tecnologias apropriadas para indexação de dados e desenvolvimento do sistema de aprendizagem adaptativa.
-- Eficiência na manipulação de diferentes tipos de dados (textos, PDFs, vídeos).
-- Competência na construção de prompts de IA que geram conteúdos adaptativos dinâmicos.
-- Capacidade de integrar diferentes componentes do sistema (indexação, interface de usuário, geração de conteúdo) de forma coesa.
-
-# Diferenciais
-- Avaliação da capacidade do sistema em identificar corretamente as dificuldades dos usuários e adaptar o conteúdo de aprendizagem conforme necessário.
-- Relevância, informatividade e adaptação do conteúdo gerado ao nível de conhecimento do usuário.
-- Performance do sistema em diferentes condições de uso e sua capacidade de escalar conforme o aumento do número de usuários.
-
-# Instruções de entrega
-1. Crie um fork do repositório no seu GitHub
-2. Faça o push do código desenvolvido no seu Github
-3. Inclua um arquivo chamado COMMENTS.md explicando
-    - Decisão da arquitetura utilizada
-    - Lista de bibliotecas de terceiros utilizadas
-    - O que você melhoraria se tivesse mais tempo
-    - Quais requisitos obrigatórios que não foram entregues
-4. Informe ao recrutador quando concluir o desafio junto com o link do repositório
-5. Após revisão do projeto junto com a equipe de desenvolvimento deixe seu repositório privado
+Desenvolvido por Alexandre Lins

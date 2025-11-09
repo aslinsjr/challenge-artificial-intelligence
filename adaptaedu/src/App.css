@@ -1,0 +1,27 @@
+.app-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Correção de overflow emergencial */
+.chat-messages * {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.message-content {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 70ch;
+}
+
+/* Garante que textos longos quebrem corretamente */
+.message-content pre,
+.message-content code {
+    white-space: pre-wrap;
+    word-break: break-all;
+}
